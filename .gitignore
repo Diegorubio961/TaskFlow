@@ -1,0 +1,38 @@
+# Dependencias
+node_modules/
+**/node_modules/
+
+# Builds
+dist/
+build/
+**/dist/
+**/build/
+
+# Variables de entorno (NUNCA commitear secretos reales)
+.env
+.env.*
+!.env.example
+**/.env
+!**/.env.example
+
+# Logs
+*.log
+npm-debug.log*
+logs/
+
+# Prisma
+backend/prisma/*.db
+
+# Coverage / tests
+coverage/
+**/coverage/
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Datos persistentes de Docker (si se montan localmente)
+pgdata/

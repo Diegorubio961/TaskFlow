@@ -1,0 +1,6 @@
+# Normaliza los saltos de línea a LF en el repositorio (evita problemas al
+# ejecutar en Linux / Raspberry Pi). Los .sh y Dockerfiles deben ser LF.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.ico binary
