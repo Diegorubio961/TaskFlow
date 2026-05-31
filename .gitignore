@@ -36,3 +36,6 @@ Thumbs.db
 
 # Datos persistentes de Docker (si se montan localmente)
 pgdata/
+
+# Documento de estudio personal (no se publica)
+docs/GUIA-ESTUDIO.md
