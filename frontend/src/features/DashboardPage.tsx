@@ -19,7 +19,7 @@ export function DashboardPage() {
     <div className="flex h-screen flex-col bg-slate-950">
       <header className="flex items-center justify-between border-b border-slate-800 bg-slate-900 px-6 py-3">
         <h1 className="text-lg font-bold text-slate-100">
-          Gestión de Tareas <span className="text-slate-400">por Proyectos</span>
+          Task<span className="text-indigo-400">Flow</span>
         </h1>
         <div className="flex items-center gap-3">
           <span className="text-sm text-slate-400">{user?.name}</span>
