@@ -3,7 +3,8 @@
  * Necesario para ejecutar en ARM 32-bit donde Prisma no tiene engine nativo.
  * El adapter delega las queries al pool de pg (JavaScript puro).
  */
-import { PrismaClient } from '@prisma/client';
+// Usa el motor WASM (independiente de arquitectura) para evitar binarios nativos ARM.
+import { PrismaClient } from '@prisma/client/wasm';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { Pool } from 'pg';
 import { env, isProd } from './env.js';

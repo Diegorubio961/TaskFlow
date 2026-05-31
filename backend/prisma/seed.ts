@@ -4,7 +4,7 @@
  *
  * Credenciales demo:  demo@gestiontareas.dev  /  Demo1234!
  */
-import { PrismaClient, TaskPriority, TaskStatus } from '@prisma/client';
+import { PrismaClient, TaskPriority, TaskStatus } from '@prisma/client/wasm';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { Pool } from 'pg';
 import bcrypt from 'bcryptjs';
