@@ -32,4 +32,4 @@ USER node
 EXPOSE 4000
 
 # runMigrations() en server.ts aplica el esquema SQL al arrancar (sin schema-engine).
-CMD ["node", "dist/server.js"]
+CMD ["node", "--experimental-wasm-modules", "dist/server.js"]
