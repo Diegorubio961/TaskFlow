@@ -1,17 +1,13 @@
-/**
- * Servicio de proyectos. Centraliza la verificación de propiedad (ownership):
- * un usuario solo puede ver/modificar sus propios proyectos.
- */
-import type { Project } from '@prisma/client';
+import type { Project } from '../domain/types.js';
 import {
-  PrismaProjectRepository,
+  PgProjectRepository,
   type IProjectRepository,
   type ProjectInput,
 } from '../repositories/project.repository.js';
 import { ForbiddenError, NotFoundError } from '../errors/AppError.js';
 
 export class ProjectService {
-  constructor(private readonly projects: IProjectRepository = new PrismaProjectRepository()) {}
+  constructor(private readonly projects: IProjectRepository = new PgProjectRepository()) {}
 
   list(ownerId: string): Promise<Project[]> {
     return this.projects.findAllByOwner(ownerId);
@@ -20,9 +16,7 @@ export class ProjectService {
   async getOwned(id: string, ownerId: string): Promise<Project> {
     const project = await this.projects.findById(id);
     if (!project) throw new NotFoundError('Proyecto no encontrado');
-    if (project.ownerId !== ownerId) {
-      throw new ForbiddenError('Este proyecto pertenece a otro usuario');
-    }
+    if (project.ownerId !== ownerId) throw new ForbiddenError('Este proyecto pertenece a otro usuario');
     return project;
   }
 
@@ -31,7 +25,7 @@ export class ProjectService {
   }
 
   async update(id: string, ownerId: string, data: Partial<ProjectInput>): Promise<Project> {
-    await this.getOwned(id, ownerId); // valida existencia + propiedad
+    await this.getOwned(id, ownerId);
     return this.projects.update(id, data);
   }
 

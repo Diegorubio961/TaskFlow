@@ -1,9 +1,5 @@
-/**
- * Servicio de autenticación: registro y login. Encapsula las reglas de negocio
- * (email único, verificación de credenciales) y emite el JWT.
- */
 import {
-  PrismaUserRepository,
+  PgUserRepository,
   type IUserRepository,
 } from '../repositories/user.repository.js';
 import { ConflictError, UnauthorizedError } from '../errors/AppError.js';
@@ -16,31 +12,21 @@ export interface AuthResult {
 }
 
 export class AuthService {
-  constructor(private readonly users: IUserRepository = new PrismaUserRepository()) {}
+  constructor(private readonly users: IUserRepository = new PgUserRepository()) {}
 
   async register(email: string, name: string, password: string): Promise<AuthResult> {
     const existing = await this.users.findByEmail(email);
-    if (existing) {
-      throw new ConflictError('Ya existe una cuenta con ese email');
-    }
-
+    if (existing) throw new ConflictError('Ya existe una cuenta con ese email');
     const passwordHash = await hashPassword(password);
     const user = await this.users.create({ email, name, passwordHash });
-
     return this.buildResult(user.id, user.email, user.name);
   }
 
   async login(email: string, password: string): Promise<AuthResult> {
     const user = await this.users.findByEmail(email);
-    if (!user) {
-      throw new UnauthorizedError('Credenciales inválidas');
-    }
-
+    if (!user) throw new UnauthorizedError('Credenciales inválidas');
     const ok = await verifyPassword(password, user.passwordHash);
-    if (!ok) {
-      throw new UnauthorizedError('Credenciales inválidas');
-    }
-
+    if (!ok) throw new UnauthorizedError('Credenciales inválidas');
     return this.buildResult(user.id, user.email, user.name);
   }
 

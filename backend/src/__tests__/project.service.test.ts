@@ -9,7 +9,7 @@ import type {
   IProjectRepository,
   ProjectInput,
 } from '../repositories/project.repository.js';
-import type { Project } from '@prisma/client';
+import type { Project } from '../domain/types.js';
 
 class InMemoryProjectRepository implements IProjectRepository {
   private projects: Project[] = [];

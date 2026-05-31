@@ -1,6 +1,6 @@
 /** Esquemas de validación zod para los payloads de la API. */
 import { z } from 'zod';
-import { TaskPriority, TaskStatus } from '@prisma/client';
+import { TaskPriority, TaskStatus } from './types.js';
 
 export const registerSchema = z.object({
   email: z.string().email('Email inválido'),

@@ -9,7 +9,7 @@ import type {
   CreateUserData,
   IUserRepository,
 } from '../repositories/user.repository.js';
-import type { User } from '@prisma/client';
+import type { User } from '../domain/types.js';
 import { hashPassword } from '../utils/password.js';
 
 class InMemoryUserRepository implements IUserRepository {

@@ -1,9 +1,7 @@
-/**
- * Repositorio de usuarios. La interfaz define el contrato (DIP): los servicios
- * dependen de la abstracción, no de Prisma. Facilita testear con dobles.
- */
-import type { PrismaClient, User } from '@prisma/client';
-import { prisma as defaultPrisma } from '../config/prisma.js';
+/** Repositorio de usuarios — implementación con pg (sin Prisma). */
+import type { Pool } from 'pg';
+import { pool as defaultPool } from '../config/db.js';
+import type { User } from '../domain/types.js';
 
 export interface CreateUserData {
   email: string;
@@ -17,18 +15,29 @@ export interface IUserRepository {
   create(data: CreateUserData): Promise<User>;
 }
 
-export class PrismaUserRepository implements IUserRepository {
-  constructor(private readonly db: PrismaClient = defaultPrisma) {}
+export class PgUserRepository implements IUserRepository {
+  constructor(private readonly db: Pool = defaultPool) {}
 
-  findByEmail(email: string): Promise<User | null> {
-    return this.db.user.findUnique({ where: { email } });
+  async findByEmail(email: string): Promise<User | null> {
+    const r = await this.db.query<User>(
+      'SELECT * FROM users WHERE email = $1 LIMIT 1',
+      [email],
+    );
+    return r.rows[0] ?? null;
   }
 
-  findById(id: string): Promise<User | null> {
-    return this.db.user.findUnique({ where: { id } });
+  async findById(id: string): Promise<User | null> {
+    const r = await this.db.query<User>('SELECT * FROM users WHERE id = $1 LIMIT 1', [id]);
+    return r.rows[0] ?? null;
   }
 
-  create(data: CreateUserData): Promise<User> {
-    return this.db.user.create({ data });
+  async create(data: CreateUserData): Promise<User> {
+    const r = await this.db.query<User>(
+      `INSERT INTO users (email, name, "passwordHash")
+       VALUES ($1, $2, $3)
+       RETURNING *`,
+      [data.email, data.name, data.passwordHash],
+    );
+    return r.rows[0];
   }
 }

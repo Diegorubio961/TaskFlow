@@ -1,8 +1,3 @@
-/**
- * Middleware central de manejo de errores. Traduce errores de dominio (AppError)
- * y de Prisma a respuestas HTTP coherentes, sin filtrar el stack en producción.
- */
-import { Prisma } from '@prisma/client';
 import type { NextFunction, Request, Response } from 'express';
 import { AppError } from '../errors/AppError.js';
 import { isProd } from '../config/env.js';
@@ -11,7 +6,6 @@ export const errorHandler = (
   err: unknown,
   _req: Request,
   res: Response,
-  // next es obligatorio para que Express reconozca esto como error handler.
   _next: NextFunction,
 ): void => {
   if (err instanceof AppError) {
@@ -19,15 +13,13 @@ export const errorHandler = (
     return;
   }
 
-  // Violación de restricción única en Prisma (p. ej. email duplicado).
-  if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
+  // Violación de unique constraint en pg (código 23505)
+  if (typeof err === 'object' && err !== null && (err as { code?: string }).code === '23505') {
     res.status(409).json({ error: { code: 'CONFLICT', message: 'El recurso ya existe' } });
     return;
   }
 
-  if (!isProd) {
-    console.error('Error no controlado:', err);
-  }
+  if (!isProd) console.error('Error no controlado:', err);
 
   res.status(500).json({
     error: {

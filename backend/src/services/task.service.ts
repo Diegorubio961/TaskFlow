@@ -1,10 +1,6 @@
-/**
- * Servicio de tareas. Toda operación valida que la tarea (o su proyecto)
- * pertenezca al usuario autenticado, reutilizando ProjectService.getOwned.
- */
-import type { Task } from '@prisma/client';
+import type { Task } from '../domain/types.js';
 import {
-  PrismaTaskRepository,
+  PgTaskRepository,
   type CreateTaskData,
   type ITaskRepository,
   type MoveTaskData,
@@ -15,12 +11,12 @@ import { NotFoundError } from '../errors/AppError.js';
 
 export class TaskService {
   constructor(
-    private readonly tasks: ITaskRepository = new PrismaTaskRepository(),
+    private readonly tasks: ITaskRepository = new PgTaskRepository(),
     private readonly projectService: ProjectService = new ProjectService(),
   ) {}
 
   async listByProject(projectId: string, ownerId: string): Promise<Task[]> {
-    await this.projectService.getOwned(projectId, ownerId); // ownership
+    await this.projectService.getOwned(projectId, ownerId);
     return this.tasks.findAllByProject(projectId);
   }
 
@@ -44,7 +40,6 @@ export class TaskService {
     await this.tasks.delete(taskId);
   }
 
-  /** Carga la tarea y valida que su proyecto pertenezca al usuario. */
   private async getOwnedTask(taskId: string, ownerId: string): Promise<Task> {
     const task = await this.tasks.findById(taskId);
     if (!task) throw new NotFoundError('Tarea no encontrada');

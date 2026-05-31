@@ -1,7 +1,7 @@
 /** Punto de entrada: aplica el esquema SQL y arranca el servidor HTTP. */
 import { createApp } from './app.js';
 import { env } from './config/env.js';
-import { prisma } from './config/prisma.js';
+import { pool } from './config/db.js';
 import { runMigrations } from './config/runMigrations.js';
 
 const start = async () => {
@@ -16,7 +16,7 @@ const start = async () => {
   const shutdown = async (signal: string) => {
     console.log(`\n${signal} recibido, cerrando servidor...`);
     server.close(async () => {
-      await prisma.$disconnect();
+      await pool.end();
       process.exit(0);
     });
   };
