@@ -8,6 +8,9 @@ COPY package*.json ./
 RUN npm install
 
 COPY prisma ./prisma
+# Fuerza descarga del binario x86 Alpine (existe en Prisma 5.x).
+# En runtime, driverAdapters en prisma.ts lo bypassa: nunca se ejecuta.
+ENV PRISMA_CLI_BINARY_TARGETS=linux-musl-openssl-3.0.x
 RUN npx prisma generate
 
 COPY tsconfig.json ./
