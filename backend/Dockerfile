@@ -1,15 +1,16 @@
 # ---------- Etapa 1: build ----------
-# Usa Debian bullseye (glibc) en arm/v7 para compatibilidad con Raspbian armhf.
-# driverAdapters en schema.prisma evita que Prisma descargue binarios nativos.
+# Usa Debian bullseye en arm/v7 para compatibilidad con Raspbian armhf.
+# El cliente Prisma está pre-generado en prisma-client/ (incluye motor WASM,
+# independiente de arquitectura). No necesitamos npx prisma generate en Docker.
 FROM --platform=linux/arm/v7 node:20-bullseye-slim AS builder
 WORKDIR /app
 
 COPY package*.json ./
 RUN npm install
 
-COPY prisma ./prisma
-# binaryTargets en schema.prisma ya fuerza el binario x86 Alpine correcto.
-RUN npx prisma generate
+# Copia el cliente Prisma pre-generado (WASM, sin binarios nativos)
+COPY prisma-client ./node_modules/.prisma/client
+COPY prisma/schema.prisma ./prisma/schema.prisma
 
 COPY tsconfig.json ./
 COPY src ./src

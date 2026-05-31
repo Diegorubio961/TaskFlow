@@ -2,6 +2,9 @@
 node_modules/
 **/node_modules/
 
+# Excepción: cliente Prisma pre-generado (WASM, sin binarios nativos)
+!backend/prisma-client/
+
 # Builds
 dist/
 build/

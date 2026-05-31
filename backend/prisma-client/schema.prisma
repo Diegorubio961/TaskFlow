@@ -5,6 +5,9 @@
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["driverAdapters"]
+  // arm32 no tiene binario en Prisma 5.x; descargamos x86 Alpine que sí existe.
+  // En runtime, driverAdapters (config/prisma.ts) usa pg y no carga ningún binario.
+  binaryTargets   = ["linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
