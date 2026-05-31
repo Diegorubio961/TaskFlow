@@ -1,4 +1,5 @@
 /** Pequeña librería de componentes UI reutilizables con Tailwind. */
+import { forwardRef } from 'react';
 import type { ButtonHTMLAttributes, InputHTMLAttributes, ReactNode, TextareaHTMLAttributes } from 'react';
 
 type ButtonVariant = 'primary' | 'secondary' | 'danger' | 'ghost';
@@ -26,23 +27,28 @@ export function Button({
   );
 }
 
-export function Input({ className = '', ...props }: InputHTMLAttributes<HTMLInputElement>) {
-  return (
+// forwardRef es obligatorio para que react-hook-form pueda leer el valor del DOM.
+export const Input = forwardRef<HTMLInputElement, InputHTMLAttributes<HTMLInputElement>>(
+  ({ className = '', ...props }, ref) => (
     <input
+      ref={ref}
       className={`w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 ${className}`}
       {...props}
     />
-  );
-}
+  ),
+);
+Input.displayName = 'Input';
 
-export function Textarea({ className = '', ...props }: TextareaHTMLAttributes<HTMLTextAreaElement>) {
-  return (
+export const Textarea = forwardRef<HTMLTextAreaElement, TextareaHTMLAttributes<HTMLTextAreaElement>>(
+  ({ className = '', ...props }, ref) => (
     <textarea
+      ref={ref}
       className={`w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 ${className}`}
       {...props}
     />
-  );
-}
+  ),
+);
+Textarea.displayName = 'Textarea';
 
 export function Field({ label, error, children }: { label: string; error?: string; children: ReactNode }) {
   return (
