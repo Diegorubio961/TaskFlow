@@ -1,16 +1,17 @@
 /**
- * Cliente Prisma como singleton. Evita abrir múltiples pools de conexiones
- * (especialmente importante en desarrollo con hot-reload).
+ * Cliente Prisma con driver adapter para pg (sin binarios nativos).
+ * Necesario para ejecutar en ARM 32-bit donde Prisma no tiene engine nativo.
+ * El adapter delega las queries al pool de pg (JavaScript puro).
  */
 import { PrismaClient } from '@prisma/client';
-import { isProd } from './env.js';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { Pool } from 'pg';
+import { env, isProd } from './env.js';
 
-const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };
+const pool = new Pool({ connectionString: env.DATABASE_URL });
+const adapter = new PrismaPg(pool);
 
-export const prisma =
-  globalForPrisma.prisma ??
-  new PrismaClient({
-    log: isProd ? ['error'] : ['error', 'warn'],
-  });
-
-if (!isProd) globalForPrisma.prisma = prisma;
+export const prisma = new PrismaClient({
+  adapter,
+  log: isProd ? ['error'] : ['error', 'warn'],
+});
