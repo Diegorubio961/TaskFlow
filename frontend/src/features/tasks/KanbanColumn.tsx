@@ -1,9 +1,7 @@
 /** Columna del Kanban: zona donde se pueden soltar tarjetas (droppable). */
 import { useDroppable } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { STATUS_LABELS, type Task, type TaskStatus } from '../../types';
 import { TaskCard } from './TaskCard';
-import { Button } from '../../components/ui';
 
 interface Props {
   status: TaskStatus;
@@ -13,41 +11,51 @@ interface Props {
   onDelete: (task: Task) => void;
 }
 
+const COLUMN_BORDER: Record<TaskStatus, string> = {
+  TODO: 'border-l-4 border-slate-500',
+  IN_PROGRESS: 'border-l-4 border-amber-500',
+  DONE: 'border-l-4 border-emerald-500',
+};
+
 export function KanbanColumn({ status, tasks, onAdd, onEdit, onDelete }: Props) {
   const { setNodeRef, isOver } = useDroppable({ id: status });
 
   return (
-    <div className="flex w-full flex-col rounded-xl bg-slate-100 p-3">
-      <div className="mb-3 flex items-center justify-between px-1">
-        <h3 className="text-sm font-semibold text-slate-700">
-          {STATUS_LABELS[status]} <span className="text-slate-400">({tasks.length})</span>
+    <div className={`flex flex-col rounded-2xl bg-slate-900 border border-slate-800 overflow-hidden ${COLUMN_BORDER[status]}`}>
+      <div className="flex items-center justify-between px-4 py-3">
+        <h3 className="text-sm font-semibold text-slate-300">
+          {STATUS_LABELS[status]}{' '}
+          <span className="text-slate-500 text-xs font-normal">({tasks.length})</span>
         </h3>
         <button
           onClick={() => onAdd(status)}
-          className="rounded px-2 text-lg leading-none text-slate-400 hover:bg-slate-200 hover:text-slate-700"
+          className="rounded px-2 text-lg leading-none text-slate-500 hover:bg-slate-800 hover:text-slate-200 transition"
           title="Añadir tarea"
         >
           +
         </button>
       </div>
+
       <div
         ref={setNodeRef}
-        className={`flex min-h-[120px] flex-1 flex-col gap-2 rounded-lg p-1 transition ${
-          isOver ? 'bg-brand-50 ring-2 ring-brand-500/40' : ''
+        className={`min-h-[200px] flex-1 flex flex-col gap-2 p-2 rounded-xl transition-colors ${
+          isOver ? 'bg-indigo-900/20 ring-1 ring-indigo-500/50' : ''
         }`}
       >
-        <SortableContext items={tasks.map((t) => t.id)} strategy={verticalListSortingStrategy}>
-          {tasks.map((task) => (
-            <TaskCard key={task.id} task={task} onEdit={onEdit} onDelete={onDelete} />
-          ))}
-        </SortableContext>
+        {tasks.map((task) => (
+          <TaskCard key={task.id} task={task} onEdit={onEdit} onDelete={onDelete} />
+        ))}
         {tasks.length === 0 && (
-          <p className="py-4 text-center text-xs text-slate-400">Sin tareas</p>
+          <p className="py-6 text-center text-xs text-slate-600">Sin tareas</p>
         )}
       </div>
-      <Button variant="ghost" className="mt-2 w-full" onClick={() => onAdd(status)}>
-        + Añadir
-      </Button>
+
+      <button
+        onClick={() => onAdd(status)}
+        className="m-2 rounded-lg px-3 py-2 text-sm text-slate-500 hover:text-slate-200 hover:bg-slate-800 transition text-left"
+      >
+        + Añadir tarea
+      </button>
     </div>
   );
 }

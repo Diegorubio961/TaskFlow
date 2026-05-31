@@ -42,18 +42,18 @@ export function LoginPage() {
         <Field label="Contraseña" error={errors.password?.message}>
           <Input type="password" autoComplete="current-password" {...register('password')} />
         </Field>
-        {serverError && <p className="text-sm text-red-600">{serverError}</p>}
+        {serverError && <p className="text-sm text-red-400">{serverError}</p>}
         <Button type="submit" disabled={isSubmitting} className="w-full">
           {isSubmitting ? 'Entrando…' : 'Entrar'}
         </Button>
       </form>
-      <p className="mt-4 text-center text-sm text-slate-500">
+      <p className="mt-4 text-center text-sm text-slate-400">
         ¿No tienes cuenta?{' '}
-        <Link to="/register" className="font-medium text-brand-600 hover:underline">
+        <Link to="/register" className="font-medium text-indigo-400 hover:text-indigo-300 hover:underline">
           Regístrate
         </Link>
       </p>
-      <p className="mt-2 text-center text-xs text-slate-400">
+      <p className="mt-2 text-center text-xs text-slate-500">
         Demo: demo@gestiontareas.dev / Demo1234!
       </p>
     </AuthShell>
@@ -70,10 +70,10 @@ export function AuthShell({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-100 p-4">
-      <div className="w-full max-w-sm rounded-xl bg-white p-8 shadow-sm">
-        <h1 className="text-xl font-bold text-slate-800">{title}</h1>
-        <p className="mb-6 text-sm text-slate-500">{subtitle}</p>
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 p-4">
+      <div className="w-full max-w-sm rounded-xl bg-slate-900/80 backdrop-blur border border-slate-700/50 shadow-2xl p-8">
+        <h1 className="text-xl font-bold text-slate-100">{title}</h1>
+        <p className="mb-6 text-sm text-slate-400">{subtitle}</p>
         {children}
       </div>
     </div>

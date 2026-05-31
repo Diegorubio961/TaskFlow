@@ -53,8 +53,8 @@ export const PRIORITY_LABELS: Record<TaskPriority, string> = {
 };
 
 export const PRIORITY_STYLES: Record<TaskPriority, string> = {
-  LOW: 'bg-slate-100 text-slate-700',
-  MEDIUM: 'bg-sky-100 text-sky-700',
-  HIGH: 'bg-amber-100 text-amber-800',
-  URGENT: 'bg-red-100 text-red-700',
+  LOW: 'bg-slate-700 text-slate-300 border border-slate-600',
+  MEDIUM: 'bg-blue-900/40 text-blue-300 border border-blue-800',
+  HIGH: 'bg-amber-900/40 text-amber-300 border border-amber-800',
+  URGENT: 'bg-red-900/40 text-red-300 border border-red-800',
 };

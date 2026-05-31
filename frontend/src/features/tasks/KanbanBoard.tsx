@@ -5,13 +5,16 @@
 import { useMemo, useState } from 'react';
 import {
   DndContext,
+  DragOverlay,
   PointerSensor,
   useSensor,
   useSensors,
   type DragEndEvent,
+  type DragStartEvent,
 } from '@dnd-kit/core';
 import {
   PRIORITY_LABELS,
+  PRIORITY_STYLES,
   STATUS_ORDER,
   type Task,
   type TaskPriority,
@@ -42,6 +45,7 @@ export function KanbanBoard({ projectId }: { projectId: string }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<Task | undefined>();
   const [newStatus, setNewStatus] = useState<TaskStatus>('TODO');
+  const [activeTask, setActiveTask] = useState<Task | null>(null);
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
 
@@ -58,21 +62,23 @@ export function KanbanBoard({ projectId }: { projectId: string }) {
   const byStatus = (status: TaskStatus) =>
     filtered.filter((t) => t.status === status).sort((a, b) => a.order - b.order);
 
+  const handleDragStart = (event: DragStartEvent) => {
+    const task = tasks.find((t) => t.id === String(event.active.id));
+    setActiveTask(task ?? null);
+  };
+
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
+    setActiveTask(null);
     if (!over) return;
 
     const taskId = String(active.id);
     const task = tasks.find((t) => t.id === taskId);
     if (!task) return;
 
-    // El destino puede ser una columna (id = status) o una tarjeta (usamos su status).
-    const overData = over.data.current as { status?: TaskStatus } | undefined;
-    const targetStatus = (STATUS_ORDER.includes(over.id as TaskStatus)
-      ? (over.id as TaskStatus)
-      : overData?.status) as TaskStatus | undefined;
-
-    if (!targetStatus || targetStatus === task.status) return;
+    const targetStatus = over.id as TaskStatus;
+    if (!STATUS_ORDER.includes(targetStatus)) return;
+    if (targetStatus === task.status) return;
 
     const order = byStatus(targetStatus).length;
     moveTask.mutate({ id: taskId, status: targetStatus, order });
@@ -108,7 +114,7 @@ export function KanbanBoard({ projectId }: { projectId: string }) {
           />
         </div>
         <select
-          className="rounded-md border border-slate-300 px-3 py-2 text-sm"
+          className="rounded-lg bg-slate-800 border border-slate-700 text-slate-300 px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
           value={priorityFilter}
           onChange={(e) => setPriorityFilter(e.target.value as TaskPriority | '')}
         >
@@ -124,7 +130,7 @@ export function KanbanBoard({ projectId }: { projectId: string }) {
         </Button>
       </div>
 
-      <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+      <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           {STATUS_ORDER.map((status) => (
             <KanbanColumn
@@ -137,6 +143,19 @@ export function KanbanBoard({ projectId }: { projectId: string }) {
             />
           ))}
         </div>
+
+        <DragOverlay>
+          {activeTask && (
+            <div className="bg-slate-800 border border-indigo-500 rounded-xl p-3 shadow-2xl opacity-95 rotate-1 cursor-grabbing">
+              <p className="text-slate-100 text-sm font-medium">{activeTask.title}</p>
+              <span
+                className={`mt-2 inline-block text-xs px-2 py-0.5 rounded-full font-medium ${PRIORITY_STYLES[activeTask.priority]}`}
+              >
+                {PRIORITY_LABELS[activeTask.priority]}
+              </span>
+            </div>
+          )}
+        </DragOverlay>
       </DndContext>
 
       <TaskModal

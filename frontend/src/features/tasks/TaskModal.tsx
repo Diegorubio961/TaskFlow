@@ -58,7 +58,7 @@ export function TaskModal({ open, onClose, onSubmit, initial, defaultStatus, sub
         <div className="grid grid-cols-2 gap-3">
           <Field label="Estado">
             <select
-              className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+              className="w-full bg-slate-800 border border-slate-700 text-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
               {...register('status')}
             >
               {STATUS_ORDER.map((s) => (
@@ -70,7 +70,7 @@ export function TaskModal({ open, onClose, onSubmit, initial, defaultStatus, sub
           </Field>
           <Field label="Prioridad">
             <select
-              className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm"
+              className="w-full bg-slate-800 border border-slate-700 text-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
               {...register('priority')}
             >
               {PRIORITIES.map((p) => (

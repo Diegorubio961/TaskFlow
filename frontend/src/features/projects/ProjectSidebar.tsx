@@ -26,15 +26,15 @@ export function ProjectSidebar({ selectedId, onSelect }: Props) {
   };
 
   return (
-    <aside className="flex w-64 shrink-0 flex-col border-r border-slate-200 bg-white">
+    <aside className="flex w-64 shrink-0 flex-col border-r border-slate-800 bg-slate-900">
       <div className="flex items-center justify-between p-4">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-500">Proyectos</h2>
+        <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">Proyectos</h2>
         <button
           onClick={() => {
             setEditing(undefined);
             setModalOpen(true);
           }}
-          className="rounded bg-brand-600 px-2 py-1 text-sm font-medium text-white hover:bg-brand-700"
+          className="rounded bg-indigo-600 px-2 py-1 text-sm font-medium text-white hover:bg-indigo-700 transition"
         >
           +
         </button>
@@ -44,7 +44,7 @@ export function ProjectSidebar({ selectedId, onSelect }: Props) {
         {isLoading ? (
           <Spinner />
         ) : projects.length === 0 ? (
-          <p className="px-2 py-4 text-sm text-slate-400">
+          <p className="px-2 py-4 text-sm text-slate-500">
             Aún no tienes proyectos. Crea el primero con el botón +.
           </p>
         ) : (
@@ -52,16 +52,16 @@ export function ProjectSidebar({ selectedId, onSelect }: Props) {
             {projects.map((project) => (
               <li key={project.id}>
                 <div
-                  className={`group flex items-center justify-between rounded-md px-3 py-2 text-sm ${
+                  className={`group flex items-center justify-between rounded-md px-3 py-2 text-sm transition ${
                     selectedId === project.id
-                      ? 'bg-brand-50 text-brand-700'
-                      : 'text-slate-700 hover:bg-slate-50'
+                      ? 'bg-indigo-900/40 text-indigo-300 border-r-2 border-indigo-500'
+                      : 'text-slate-300 hover:bg-slate-800'
                   }`}
                 >
                   <button className="flex-1 text-left" onClick={() => onSelect(project.id)}>
                     <span className="font-medium">{project.name}</span>
                     {project._count && (
-                      <span className="ml-1 text-xs text-slate-400">({project._count.tasks})</span>
+                      <span className="ml-1 text-xs text-slate-500">({project._count.tasks})</span>
                     )}
                   </button>
                   <div className="flex gap-1 opacity-0 transition group-hover:opacity-100">
@@ -70,14 +70,14 @@ export function ProjectSidebar({ selectedId, onSelect }: Props) {
                         setEditing(project);
                         setModalOpen(true);
                       }}
-                      className="text-slate-400 hover:text-slate-700"
+                      className="text-slate-500 hover:text-slate-200"
                       title="Editar"
                     >
                       ✎
                     </button>
                     <button
                       onClick={() => handleDelete(project)}
-                      className="text-slate-400 hover:text-red-600"
+                      className="text-slate-500 hover:text-red-400"
                       title="Eliminar"
                     >
                       ✕

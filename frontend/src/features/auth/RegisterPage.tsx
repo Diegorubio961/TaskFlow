@@ -47,14 +47,14 @@ export function RegisterPage() {
         <Field label="Contraseña" error={errors.password?.message}>
           <Input type="password" autoComplete="new-password" {...register('password')} />
         </Field>
-        {serverError && <p className="text-sm text-red-600">{serverError}</p>}
+        {serverError && <p className="text-sm text-red-400">{serverError}</p>}
         <Button type="submit" disabled={isSubmitting} className="w-full">
           {isSubmitting ? 'Creando…' : 'Registrarme'}
         </Button>
       </form>
-      <p className="mt-4 text-center text-sm text-slate-500">
+      <p className="mt-4 text-center text-sm text-slate-400">
         ¿Ya tienes cuenta?{' '}
-        <Link to="/login" className="font-medium text-brand-600 hover:underline">
+        <Link to="/login" className="font-medium text-indigo-400 hover:text-indigo-300 hover:underline">
           Inicia sesión
         </Link>
       </p>
