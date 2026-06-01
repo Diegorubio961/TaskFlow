@@ -72,8 +72,13 @@ export function AuthShell({
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 p-4">
       <div className="w-full max-w-sm rounded-xl bg-slate-900/80 backdrop-blur border border-slate-700/50 shadow-2xl p-8">
-        <h1 className="text-xl font-bold text-slate-100">{title}</h1>
-        <p className="mb-6 text-sm text-slate-400">{subtitle}</p>
+        <div className="mb-6">
+          <p className="text-2xl font-bold text-slate-100 mb-1">
+            Task<span className="text-indigo-400">Flow</span>
+          </p>
+          <h1 className="text-base font-semibold text-slate-200">{title}</h1>
+          <p className="text-sm text-slate-400">{subtitle}</p>
+        </div>
         {children}
       </div>
     </div>
