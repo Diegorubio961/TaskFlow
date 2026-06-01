@@ -42,3 +42,5 @@ pgdata/
 
 # Documentos
 docs/*
+
+.claude/*
