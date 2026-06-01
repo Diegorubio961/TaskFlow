@@ -4,6 +4,21 @@ Aplicación full-stack para gestionar proyectos y tareas mediante un tablero **K
 
 ---
 
+## Demo en vivo
+
+Para probar la aplicación sin instalar nada, está desplegada en una **Raspberry Pi** disponible como servidor:
+
+**https://riverside-justice-redhead-thinks.trycloudflare.com**
+
+```
+Email:    demo@gestiontareas.dev
+Password: Demo1234!
+```
+
+> La Raspberry Pi corre Raspberry Pi OS (ARM 32-bit). Los contenedores Docker están compilados para esa arquitectura — PostgreSQL, la API Node.js y el frontend nginx corren directamente en la Pi sin capa de virtualización adicional.
+
+---
+
 ## Stack
 
 | Capa | Tecnología |
