@@ -19,6 +19,11 @@ const schema = z.object({
   description: z.string().optional(),
   status: z.enum(['TODO', 'IN_PROGRESS', 'DONE']),
   priority: z.enum(['LOW', 'MEDIUM', 'HIGH', 'URGENT']),
+  dueDate: z
+    .string()
+    .optional()
+    .nullable()
+    .transform((v) => (v === '' ? null : v ?? null)),
 });
 type FormData = z.infer<typeof schema>;
 
@@ -29,6 +34,12 @@ interface Props {
   initial?: Task;
   defaultStatus?: TaskStatus;
   submitting?: boolean;
+}
+
+/** Convierte un ISO datetime a YYYY-MM-DD para el input type="date". */
+function toDateInput(iso: string | null | undefined): string {
+  if (!iso) return '';
+  return iso.slice(0, 10);
 }
 
 export function TaskModal({ open, onClose, onSubmit, initial, defaultStatus, submitting }: Props) {
@@ -43,6 +54,7 @@ export function TaskModal({ open, onClose, onSubmit, initial, defaultStatus, sub
       description: initial?.description ?? '',
       status: initial?.status ?? defaultStatus ?? 'TODO',
       priority: initial?.priority ?? 'MEDIUM',
+      dueDate: toDateInput(initial?.dueDate),
     },
   });
 
@@ -81,6 +93,13 @@ export function TaskModal({ open, onClose, onSubmit, initial, defaultStatus, sub
             </select>
           </Field>
         </div>
+        <Field label="Fecha de entrega">
+          <input
+            type="date"
+            className="w-full bg-slate-800 border border-slate-700 text-slate-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-indigo-500 [color-scheme:dark]"
+            {...register('dueDate')}
+          />
+        </Field>
         <div className="flex justify-end gap-2 pt-2">
           <Button type="button" variant="secondary" onClick={onClose}>
             Cancelar

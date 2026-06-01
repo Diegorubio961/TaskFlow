@@ -15,7 +15,11 @@
       "Edit",
       "Read",
       "Glob",
-      "Grep"
+      "Grep",
+      "Bash(Get-ChildItem -Recurse -Force)",
+      "Bash(Select-Object FullName)",
+      "Bash(Get-ChildItem \"C:\\\\Users\\\\DIEGOAVALE\\\\OneDrive - PROTELA SA\\\\Escritorio\\\\GestionTareas\" -Depth 0)",
+      "Bash(Select-Object Name)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"

@@ -8,9 +8,11 @@ import type { Project } from '../../types';
 interface Props {
   selectedId: string | null;
   onSelect: (id: string) => void;
+  isMobileOpen?: boolean;
+  onMobileClose?: () => void;
 }
 
-export function ProjectSidebar({ selectedId, onSelect }: Props) {
+export function ProjectSidebar({ selectedId, onSelect, isMobileOpen = false, onMobileClose }: Props) {
   const { data: projects = [], isLoading } = useProjects();
   const createProject = useCreateProject();
   const updateProject = useUpdateProject();
@@ -26,18 +28,38 @@ export function ProjectSidebar({ selectedId, onSelect }: Props) {
   };
 
   return (
-    <aside className="flex w-64 shrink-0 flex-col border-r border-slate-800 bg-slate-900">
+    <aside
+      className={[
+        // Base
+        'flex w-64 shrink-0 flex-col border-r border-slate-800 bg-slate-900',
+        // Móvil: fixed slide-in/out
+        'fixed inset-y-0 left-0 z-50 transition-transform duration-200 ease-in-out',
+        isMobileOpen ? 'translate-x-0' : '-translate-x-full',
+        // Desktop: posición normal en el flujo
+        'md:relative md:translate-x-0 md:inset-auto md:z-auto',
+      ].join(' ')}
+    >
       <div className="flex items-center justify-between p-4">
         <h2 className="text-xs font-semibold uppercase tracking-wide text-slate-500">Proyectos</h2>
-        <button
-          onClick={() => {
-            setEditing(undefined);
-            setModalOpen(true);
-          }}
-          className="rounded bg-indigo-600 px-2 py-1 text-sm font-medium text-white hover:bg-indigo-700 transition"
-        >
-          +
-        </button>
+        <div className="flex items-center gap-1">
+          <button
+            onClick={() => {
+              setEditing(undefined);
+              setModalOpen(true);
+            }}
+            className="rounded bg-indigo-600 px-2 py-1 text-sm font-medium text-white hover:bg-indigo-700 transition"
+          >
+            +
+          </button>
+          {/* Botón cerrar sidebar en móvil */}
+          <button
+            className="md:hidden rounded p-1 text-slate-500 hover:text-slate-200 hover:bg-slate-800 transition"
+            onClick={onMobileClose}
+            aria-label="Cerrar"
+          >
+            ✕
+          </button>
+        </div>
       </div>
 
       <div className="flex-1 overflow-y-auto px-2">

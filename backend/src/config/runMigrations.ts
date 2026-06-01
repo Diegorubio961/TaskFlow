@@ -50,6 +50,12 @@ const SCHEMA_SQL = `
   CREATE INDEX IF NOT EXISTS "projects_ownerId_idx" ON "projects"("ownerId");
   CREATE INDEX IF NOT EXISTS "tasks_projectId_idx"  ON "tasks"("projectId");
   CREATE INDEX IF NOT EXISTS "tasks_status_idx"     ON "tasks"("status");
+
+  -- Columna para rastrear cuándo cambió el estado (idempotente)
+  ALTER TABLE "tasks" ADD COLUMN IF NOT EXISTS "statusChangedAt" TIMESTAMPTZ DEFAULT NOW();
+
+  -- Rellena registros existentes que quedaron en NULL
+  UPDATE "tasks" SET "statusChangedAt" = "updatedAt" WHERE "statusChangedAt" IS NULL;
 `;
 
 export async function runMigrations(): Promise<void> {

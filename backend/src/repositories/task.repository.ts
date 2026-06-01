@@ -68,7 +68,8 @@ export class PgTaskRepository implements ITaskRepository {
     let idx = 1;
     if (data.title !== undefined)       { sets.push(`title = $${idx++}`);        values.push(data.title); }
     if (data.description !== undefined) { sets.push(`description = $${idx++}`);  values.push(data.description); }
-    if (data.status !== undefined)      { sets.push(`status = $${idx++}`);       values.push(data.status); }
+    if (data.status !== undefined)      { sets.push(`status = $${idx++}`);       values.push(data.status);
+                                          sets.push(`"statusChangedAt" = NOW()`); }
     if (data.priority !== undefined)    { sets.push(`priority = $${idx++}`);     values.push(data.priority); }
     if (data.dueDate !== undefined)     { sets.push(`"dueDate" = $${idx++}`);    values.push(data.dueDate); }
     if (data.order !== undefined)       { sets.push(`"order" = $${idx++}`);      values.push(data.order); }
@@ -83,7 +84,7 @@ export class PgTaskRepository implements ITaskRepository {
 
   async move(id: string, data: MoveTaskData): Promise<Task> {
     const r = await this.db.query<Task>(
-      `UPDATE tasks SET status = $1, "order" = $2, "updatedAt" = NOW()
+      `UPDATE tasks SET status = $1, "order" = $2, "updatedAt" = NOW(), "statusChangedAt" = NOW()
        WHERE id = $3 RETURNING *`,
       [data.status, data.order, id],
     );

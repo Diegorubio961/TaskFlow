@@ -44,6 +44,7 @@ export interface Task {
   priority: TaskPriority;
   order: number;
   dueDate: Date | null;
+  statusChangedAt: Date | null;
   projectId: string;
   createdAt: Date;
   updatedAt: Date;

@@ -105,16 +105,16 @@ export function KanbanBoard({ projectId }: { projectId: string }) {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center gap-3">
-        <div className="w-56">
-          <Input
-            placeholder="Buscar por título…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
+      {/* Barra de filtros — responsiva */}
+      <div className="flex flex-wrap items-center gap-2">
+        <Input
+          className="flex-1 min-w-[140px]"
+          placeholder="Buscar por título…"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
         <select
-          className="rounded-lg bg-slate-800 border border-slate-700 text-slate-300 px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
+          className="flex-1 min-w-[140px] rounded-lg bg-slate-800 border border-slate-700 text-slate-300 px-3 py-2 text-sm focus:outline-none focus:border-indigo-500"
           value={priorityFilter}
           onChange={(e) => setPriorityFilter(e.target.value as TaskPriority | '')}
         >
@@ -125,22 +125,24 @@ export function KanbanBoard({ projectId }: { projectId: string }) {
             </option>
           ))}
         </select>
-        <Button onClick={() => openCreate('TODO')} className="ml-auto">
+        <Button onClick={() => openCreate('TODO')} className="w-full sm:w-auto">
           + Nueva tarea
         </Button>
       </div>
 
       <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        {/* Columnas: scroll horizontal en móvil, grid en desktop */}
+        <div className="flex gap-4 overflow-x-auto pb-4 md:grid md:grid-cols-3 md:overflow-visible md:pb-0">
           {STATUS_ORDER.map((status) => (
-            <KanbanColumn
-              key={status}
-              status={status}
-              tasks={byStatus(status)}
-              onAdd={openCreate}
-              onEdit={openEdit}
-              onDelete={handleDelete}
-            />
+            <div key={status} className="min-w-[280px] shrink-0 md:min-w-0">
+              <KanbanColumn
+                status={status}
+                tasks={byStatus(status)}
+                onAdd={openCreate}
+                onEdit={openEdit}
+                onDelete={handleDelete}
+              />
+            </div>
           ))}
         </div>
 
