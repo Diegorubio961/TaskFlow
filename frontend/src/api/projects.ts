@@ -16,4 +16,7 @@ export const projectsApi = {
     api.patch<Project>(`/projects/${id}`, payload).then((r) => r.data),
 
   remove: (id: string) => api.delete(`/projects/${id}`).then(() => undefined),
+
+  summarize: (id: string) =>
+    api.get<{ summary: string }>(`/projects/${id}/summary`).then((r) => r.data.summary),
 };

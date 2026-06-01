@@ -8,7 +8,7 @@ Aplicación full-stack para gestionar proyectos y tareas mediante un tablero **K
 
 Para probar la aplicación sin instalar nada, está desplegada en una **Raspberry Pi** disponible como servidor:
 
-**https://riverside-justice-redhead-thinks.trycloudflare.com**
+**https://riverside-justice-redhead-thinks.trycloudflare.com/**
 
 ```
 Email:    demo@gestiontareas.dev

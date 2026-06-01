@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { ProjectController } from '../controllers/project.controller.js';
 import { TaskController } from '../controllers/task.controller.js';
+import { AiController } from '../controllers/ai.controller.js';
 import { authenticate } from '../middlewares/auth.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { validate } from '../middlewares/validate.js';
@@ -14,6 +15,7 @@ import {
 
 const projects = new ProjectController();
 const tasks = new TaskController();
+const ai = new AiController();
 
 export const projectRouter = Router();
 
@@ -50,3 +52,6 @@ projectRouter.post(
   validate({ params: projectIdParamSchema, body: createTaskSchema }),
   asyncHandler(tasks.create),
 );
+
+// --- Resumen IA ---
+projectRouter.get('/:id/summary', validate({ params: idParamSchema }), asyncHandler(ai.summarize));

@@ -15,6 +15,7 @@ const envSchema = z.object({
   CORS_ORIGIN: z.string().default('http://localhost:8080'),
   RATE_LIMIT_WINDOW_MS: z.coerce.number().int().positive().default(900_000),
   RATE_LIMIT_MAX: z.coerce.number().int().positive().default(100),
+  OPENAI_API_KEY: z.string().optional(),
 });
 
 const parsed = envSchema.safeParse(process.env);
